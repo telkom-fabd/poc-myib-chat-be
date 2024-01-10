@@ -13,11 +13,6 @@ const list = async (params) => {
     // init filters
     let filters = [];
 
-    // filter : status
-    if (params.status && constant.USER_STATUS_LIST.includes(params.status)) {
-        filters.push({status: params.status});
-    }
-
     // filter : search
     if (params.search && params.search !== "") {
         filters.push({
@@ -34,7 +29,7 @@ const list = async (params) => {
 
     // sort
     pipelines.push({
-        $sort: mongoQuery.getSort(params.sort_by, 'createdAt', params.sort_dir, 'desc'),
+        $sort: mongoQuery.getSort(params.sort_by, 'name', params.sort_dir, 'asc'),
     });
 
     // get total merchant

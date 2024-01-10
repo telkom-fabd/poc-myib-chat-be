@@ -1,6 +1,6 @@
 const encryption = require('./../../utils/encryption');
 const respond = require('./../../utils/respond');
-const userRepository = require('./../../domains/user/v1/repository');
+const merchantRepository = require('./../../domains/merchant/v1/repository');
 
 module.exports = () => {
     return async (req, res, next) => {
@@ -15,12 +15,12 @@ module.exports = () => {
         const decodedJWT = encryption.verifyJWT(token);
         if (!decodedJWT) return respond.responseUnauthenticated(res, 'Invalid token');
 
-        // find user
-        const user = await userRepository.findById(decodedJWT.user_id);
-        if (!user) return respond.responseUnauthenticated(res, 'Invalid token');
+        // find merchant
+        const merchant = await merchantRepository.findById(decodedJWT.id);
+        if (!merchant) return respond.responseUnauthenticated(res, 'Invalid token');
 
-        // add user to req
-        req.user = user;
+        // add merchant to req
+        req.user = merchant;
 
         // continue
         next();
