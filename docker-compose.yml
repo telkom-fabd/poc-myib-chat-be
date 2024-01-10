@@ -1,0 +1,40 @@
+version: '3.7'
+
+volumes:
+  poc_myib_chat_ib_mongo_data: { }
+  poc_myib_chat_ib_node_modules: { }
+
+networks:
+  poc_myib_chat_ib:
+    driver: bridge
+
+services:
+  poc_myib_chat_ib_mongo:
+    container_name: poc_myib_chat_ib_mongo
+    image: mongo
+    networks:
+      - poc_myib_chat_ib
+    environment:
+      MONGODB_USER: root
+      MONGODB_PASSWORD: passroot
+    ports:
+      - "27017:27017"
+    command: mongod
+    volumes:
+      - poc_myib_chat_ib_mongo_data:/data/db
+#  skilvul_api:
+#    container_name: skilvul_api
+#    depends_on:
+#      - poc_myib_chat_ib_mongo
+#    networks:
+#      - poc_myib_chat_ib
+#    build:
+#      context: .
+#      dockerfile: Dockerfile.dev
+#    restart: unless-stopped
+#    env_file: .env
+#    ports:
+#      - "3001:3001"
+#    volumes:
+#      - .:/usr/src/app
+#      - poc_myib_chat_ib_node_modules:/usr/src/app/node_modules
