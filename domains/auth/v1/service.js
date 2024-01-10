@@ -37,7 +37,7 @@ const registerMerchant = async (body) => {
     // return
     return {
         access_token: accessToken,
-        merchant: merchant
+        user: merchant
     };
 };
 
@@ -67,7 +67,8 @@ const loginMerchant = async (body) => {
 
     // return
     return {
-        access_token: accessToken
+        access_token: accessToken,
+        user: merchant
     };
 };
 
