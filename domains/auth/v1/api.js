@@ -25,4 +25,24 @@ router.post(
     controller.loginMerchant
 );
 
+/**
+ * Register Customer
+ * @api public
+ */
+router.post(
+    '/register-customer',
+    inputValidation(validation.registerCustomer),
+    controller.registerCustomer
+);
+
+/**
+ * Login Customer
+ * @api public
+ */
+router.post(
+    '/login-customer',
+    inputValidation(validation.loginCustomer),
+    controller.loginCustomer
+);
+
 module.exports = router;

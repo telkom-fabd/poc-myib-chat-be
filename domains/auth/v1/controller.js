@@ -41,7 +41,47 @@ const loginMerchant = async (req, res) => {
     }
 };
 
+/**
+ * Register Customer
+ * @param {Object} req express request object
+ * @param {Object} res express response object
+ */
+const registerCustomer = async (req, res) => {
+    try {
+        const result = await service.registerCustomer(req.body);
+        return respond.responseSuccess(res, "Customer Registered", result, undefined);
+    } catch (e) {
+        if (e.name === errorHelper.BAD_REQUEST) {
+            return respond.responseBadRequest(res, e.message);
+        }
+
+        logger.error(e);
+        return respond.responseError(res, e.statusCode, e.message);
+    }
+};
+
+/**
+ * Login Customer
+ * @param {Object} req express request object
+ * @param {Object} res express response object
+ */
+const loginCustomer = async (req, res) => {
+    try {
+        const result = await service.loginCustomer(req.body);
+        return respond.responseSuccess(res, "Merchant Logged In", result, undefined);
+    } catch (e) {
+        if (e.name === errorHelper.BAD_REQUEST) {
+            return respond.responseBadRequest(res, e.message);
+        }
+
+        logger.error(e);
+        return respond.responseError(res, e.statusCode, e.message);
+    }
+};
+
 module.exports = {
     registerMerchant,
     loginMerchant,
+    registerCustomer,
+    loginCustomer,
 };

@@ -1,5 +1,7 @@
 const merchantRepository = require('../../merchant/v1/repository')
-const {STATUS_ACTIVE} = require('../../merchant/v1/constant');
+const merchantConstant = require('../../merchant/v1/constant');
+const customerRepository = require('../../customer/v1/repository')
+const customerConstant = require('../../customer/v1/constant');
 const dateFormat = require('../../../utils/dateFormat');
 const encryption = require('../../../utils/encryption');
 const errorHelper = require('../../../utils/error');
@@ -17,7 +19,7 @@ const registerMerchant = async (body) => {
     body.registered_at = dateFormat.nowUtc7();
 
     // status
-    body.status = STATUS_ACTIVE;
+    body.status = merchantConstant.STATUS_ACTIVE;
 
     // encrypt password
     body.password = encryption.encryptPassword(body.password);
@@ -31,6 +33,7 @@ const registerMerchant = async (body) => {
         email: merchant.email,
         name: merchant.name,
         avatar: merchant.avatar,
+        role: merchantConstant.ROLE_MERCHANT,
     };
     const accessToken = encryption.generateJWT(payloadJWT);
 
@@ -62,6 +65,7 @@ const loginMerchant = async (body) => {
         email: merchant.email,
         name: merchant.name,
         avatar: merchant.avatar,
+        role: merchantConstant.ROLE_MERCHANT,
     };
     const accessToken = encryption.generateJWT(payloadJWT);
 
@@ -72,7 +76,79 @@ const loginMerchant = async (body) => {
     };
 };
 
+/**
+ * Register Customer
+ * @param {Object} body
+ */
+const registerCustomer = async (body) => {
+    // find exist customer with email
+    const existCustomer = await customerRepository.findByEmail(body.email);
+    if (existCustomer) errorHelper.throwBadRequest(`Customer with email ${body.email} is already exist`);
+
+    // registered at
+    body.registered_at = dateFormat.nowUtc7();
+
+    // status
+    body.status = customerConstant.STATUS_ACTIVE;
+
+    // encrypt password
+    body.password = encryption.encryptPassword(body.password);
+
+    // create customer
+    const customer = await customerRepository.save(body);
+
+    // generate JWT
+    const payloadJWT = {
+        id: customer._id,
+        email: customer.email,
+        name: customer.name,
+        avatar: customer.avatar,
+        role: customerConstant.ROLE_CUSTOMER,
+    };
+    const accessToken = encryption.generateJWT(payloadJWT);
+
+    // return
+    return {
+        access_token: accessToken,
+        user: customer
+    };
+};
+
+/**
+ * Login Customer
+ * @param {Object} body
+ */
+const loginCustomer = async (body) => {
+    // find exist customer with email
+    const customer = await customerRepository.findByEmail(body.email);
+
+    // check customer
+    if (!customer) errorHelper.throwBadRequest(`Invalid Email or Password`);
+
+    // check password
+    const isPasswordValid = encryption.comparePassword(body.password, customer.password);
+    if (!isPasswordValid) errorHelper.throwBadRequest(`Invalid Email or Password`);
+
+    // generate JWT
+    const payloadJWT = {
+        id: customer._id,
+        email: customer.email,
+        name: customer.name,
+        avatar: customer.avatar,
+        role: customerConstant.ROLE_CUSTOMER,
+    };
+    const accessToken = encryption.generateJWT(payloadJWT);
+
+    // return
+    return {
+        access_token: accessToken,
+        user: customer
+    };
+};
+
 module.exports = {
     registerMerchant,
     loginMerchant,
+    registerCustomer,
+    loginCustomer,
 };
