@@ -14,13 +14,11 @@ const setPrivateRoutes = require('./routes/private');
 
 // db start & configs
 try {
-    const mongoURL = process.env.MONGODB_CONNECTION_STRING;
-    console.log("mongoURL: ", mongoURL);
-
     mongoose.Promise = bluebird;
     let isConnectedBefore = false;
     let connect = function () {
-        mongoose.connect(mongoURL, {
+        mongoose.connect(process.env.MONGODB_CONNECTION_STRING, {
+            dbName: process.env.MONGODB_DATABASE_NAME,
             useNewUrlParser: true,
         });
     };
