@@ -29,6 +29,14 @@ const merchantSchema = mongoose.Schema(
             type: Date,
             default: Date.now,
         },
+        sendbird: {
+            user_id: {
+                type: String,
+            },
+            access_token: {
+                type: String,
+            },
+        }
     },
     {timestamps: true}
 );

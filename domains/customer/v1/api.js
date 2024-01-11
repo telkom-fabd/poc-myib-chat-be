@@ -22,5 +22,14 @@ router.get(
     controller.detail
 );
 
+/**
+ * Create Sendbird User
+ * @api private
+ */
+router.post(
+    '/:id/create-sendbird-user',
+    controller.createSendbirdUser
+);
+
 
 module.exports = router;

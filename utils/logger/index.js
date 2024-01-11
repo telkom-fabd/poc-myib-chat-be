@@ -3,6 +3,7 @@ const info = (message) => {
         console.log(message);
     } else {
         // use logger like logstash, etc
+        console.log(message);
     }
 };
 
@@ -11,6 +12,7 @@ const error = (message) => {
         console.log(message);
     } else {
         // use logger like logstash, etc
+        console.log(message);
     }
 };
 
