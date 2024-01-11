@@ -17,6 +17,7 @@ const index = async (query) => {
 const detail = async (id) => {
     const merchant = await repository.findById(id);
     if (!merchant) errorHelper.throwNotFound("Merchant Not Found");
+    delete merchant.password;
     return merchant;
 };
 

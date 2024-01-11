@@ -55,6 +55,9 @@ const list = async (params) => {
 
     // get data
     const data = await Merchant.aggregate(pipelines);
+    for (let i = 0; i < data.length; i++) {
+        delete data[i].password;
+    }
 
     // return
     return {
