@@ -23,11 +23,20 @@ router.get(
 );
 
 /**
+ * Get Sendbird User
+ * @api private
+ */
+router.get(
+    '/:id/sendbird-user',
+    controller.getSendbirdUser
+);
+
+/**
  * Create Sendbird User
  * @api private
  */
 router.post(
-    '/:id/create-sendbird-user',
+    '/:id/sendbird-user',
     controller.createSendbirdUser
 );
 

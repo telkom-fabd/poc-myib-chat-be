@@ -37,6 +37,24 @@ const detail = async (req, res) => {
 };
 
 /**
+ * Get Sendbird User
+ * @param {Object} req express request object
+ * @param {Object} res express response object
+ */
+const getSendbirdUser = async (req, res) => {
+    try {
+        const result = await service.getSendbirdUser(req.params.id);
+        return respond.responseSuccess(res, "Sendbird User Found", result, undefined);
+    } catch (e) {
+        if (e.name === errorHelper.NOT_FOUND) {
+            return respond.responseNotFound(res, e.message);
+        }
+        logger.info(e);
+        return respond.responseError(res, e.statusCode, e.message);
+    }
+};
+
+/**
  * Create Sendbird User
  * @param {Object} req express request object
  * @param {Object} res express response object
@@ -58,5 +76,6 @@ const createSendbirdUser = async (req, res) => {
 module.exports = {
     index,
     detail,
+    getSendbirdUser,
     createSendbirdUser,
 };
