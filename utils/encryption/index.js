@@ -30,7 +30,7 @@ const generateJWT = (payload) => {
         payload,
         process.env.JWT_SECRET_KEY,
         {
-            expiresIn: process.env.JWT_EXPIRED_IN,
+            expiresIn: '7d',
             issuer: process.env.JWT_ISSUER,
         }
     );
