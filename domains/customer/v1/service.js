@@ -2,6 +2,8 @@ const repository = require('./repository');
 const errorHelper = require('../../../utils/error');
 const sendbird = require('../../../libraries/sendbird');
 
+const SENDBIRD_CODE_USER_NOT_FOUND = 400201;
+
 /**
  * Get List Customer
  * @param {Object} query values for filtering needs
@@ -23,6 +25,33 @@ const detail = async (id) => {
 };
 
 /**
+ * Get Sendbird User
+ * @param {String} id
+ */
+const getSendbirdUser = async (id) => {
+    const customer = await repository.findById(id);
+    if (!customer) errorHelper.throwNotFound("Customer Not Found");
+
+    const getSendbirdUser = await sendbird.getUser(customer._id);
+    if (!getSendbirdUser.isSuccess) {
+        if (getSendbirdUser.code === SENDBIRD_CODE_USER_NOT_FOUND) {
+            return {
+                user: null,
+                message: "Sendbird user Not Found",
+            };
+        }
+
+        console.log(getSendbirdUser.message);
+        errorHelper.throwInternalServerError();
+    }
+
+    return {
+        user: getSendbirdUser.data,
+        message: "Sendbird user Found",
+    };
+};
+
+/**
  * Create Sendbird User
  * @param {String} id
  */
@@ -33,6 +62,7 @@ const createSendbirdUser = async (id) => {
     const getSendbirdUser = await sendbird.getUser(customer._id);
     if (getSendbirdUser.isSuccess) {
         return {
+            sendbird_user: getSendbirdUser.data,
             message: "Sendbird user already exist",
         };
     }
@@ -48,6 +78,7 @@ const createSendbirdUser = async (id) => {
     });
 
     return {
+        sendbird_user: result.data,
         message: "Success create sendbird user",
     };
 };
@@ -56,5 +87,6 @@ const createSendbirdUser = async (id) => {
 module.exports = {
     index,
     detail,
+    getSendbirdUser,
     createSendbirdUser,
 };

@@ -64,6 +64,7 @@ const getUser = async (userId) => {
     } catch (err) {
         return {
             isSuccess: false,
+            code: err.response.data.code,
             message: err.response.data.message,
         };
     }
